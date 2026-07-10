@@ -24,3 +24,18 @@ class CancelAppointmentRequest(BaseModel):
 class CancelAppointmentResponse(BaseModel):
     success: bool
     message: str
+
+
+class RescheduleAppointmentRequest(BaseModel):
+    appointment_id: int
+    new_availability_id: int
+
+
+class RescheduleAppointmentResponse(BaseModel):
+    success: bool
+    appointment_id: int
+    doctor: str
+    branch: str
+    date: str
+    time: str
+    message: str

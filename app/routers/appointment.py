@@ -7,6 +7,8 @@ from app.schemas.appointment import (
     BookAppointmentResponse,
     CancelAppointmentRequest,
     CancelAppointmentResponse,
+    RescheduleAppointmentRequest,
+    RescheduleAppointmentResponse,
 )
 from app.services.booking_service import BookingService
 
@@ -45,4 +47,18 @@ def cancel_appointment(
     return BookingService.cancel_appointment(
         db=db,
         appointment_id=request.appointment_id,
+    )
+
+@router.post(
+    "/reschedule",
+    response_model=RescheduleAppointmentResponse,
+)
+def reschedule_appointment(
+    request: RescheduleAppointmentRequest,
+    db: Session = Depends(get_db),
+):
+    return BookingService.reschedule_appointment(
+        db=db,
+        appointment_id=request.appointment_id,
+        new_availability_id=request.new_availability_id,
     )

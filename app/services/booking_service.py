@@ -106,3 +106,79 @@ class BookingService:
             "success": True,
             "message": "Appointment cancelled successfully."
         }
+
+    @staticmethod
+    def reschedule_appointment(
+        db: Session,
+        appointment_id: int,
+        new_availability_id: int,
+    ):
+        # Find appointment
+        appointment = (
+            db.query(Appointment)
+            .filter(Appointment.appointment_id == appointment_id)
+            .first()
+        )
+
+        if appointment is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Appointment not found."
+            )
+
+        if appointment.status == "CANCELLED":
+            raise HTTPException(
+                status_code=409,
+                detail="Cancelled appointments cannot be rescheduled."
+            )
+
+        # Current slot
+        old_slot = appointment.availability
+
+        # New slot
+        new_slot = (
+            db.query(Availability)
+            .filter(Availability.id == new_availability_id)
+            .first()
+        )
+
+        if new_slot is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Requested availability slot not found."
+            )
+
+        if new_slot.is_booked:
+            raise HTTPException(
+                status_code=409,
+                detail="Requested slot is already booked."
+            )
+
+        # Release old slot
+        old_slot.is_booked = False
+
+        # Reserve new slot
+        new_slot.is_booked = True
+
+        # Update appointment
+        appointment.availability_id = new_slot.id
+        appointment.doctor_id = new_slot.doctor_id
+        appointment.status = "BOOKED"
+
+        try:
+            db.commit()
+        except Exception:
+            db.rollback()
+            raise
+
+        db.refresh(appointment)
+
+        return {
+            "success": True,
+            "appointment_id": appointment.appointment_id,
+            "doctor": new_slot.doctor.name,
+            "branch": new_slot.doctor.branch.name,
+            "date": new_slot.date.isoformat(),
+            "time": new_slot.start_time.strftime("%H:%M"),
+            "message": "Appointment rescheduled successfully."
+        }
