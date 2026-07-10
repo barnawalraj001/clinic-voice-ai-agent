@@ -1,0 +1,19 @@
+doctor_id,name,specialty,branch_id,experience_years
+D001,Dr Saujatya Chakraborty,Cardiology,B001,16
+D002,Dr Mahesh Goenka,Gastroenterology & Hepatology,B001,45
+D003,Dr Ranjan Kamilya,Orthopedics,B001,25
+D004,Dr Debasish Mitra,Pediatrics,B001,24
+D005,Dr Ramna Banerjee,Obstetrics & Gynecology,B001,24
+D006,Dr Shantanu Panja,ENT,B001,10
+D007,Dr Arindam Mukherjee,Pulmonology,B001,16
+D008,Dr Amvrin Chatterjee,Urology,B001,16
+D009,Dr Biswaroop Mukherjee,Internal Medicine,B001,16
+D010,Dr Aditya Verma,Cardiac Sciences,B002,11
+D011,Dr Debasis Sardar,Gastroenterology & Hepatology,B002,16
+D012,Dr Nilanjan Mitra,Urology,B002,22
+D013,Dr Samir Dasgupta,Internal Medicine,B002,36
+D014,Dr Tarak Nath Das,Emergency Medicine,B002,25
+D015,Dr Priyojit Bagchi,Critical Care,B002,8
+D016,Dr Sourodeep Mandal,Gastroenterology & Hepatology,B002,12
+D017,Dr Sumeet Kumar De,Pulmonology,B002,12
+D018,Dr Shashank Kumar,Pulmonology,B002,7
