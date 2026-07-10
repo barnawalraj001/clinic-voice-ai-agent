@@ -22,4 +22,5 @@ class SlotResponse(BaseModel):
 
 
 class AvailabilitySearchResponse(BaseModel):
+    count: int
     available_slots: list[SlotResponse]

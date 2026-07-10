@@ -31,4 +31,4 @@ def search_availability(
 
     query = query.order_by(Availability.date, Availability.start_time)
 
-    return query.all()
+    return query.limit(5).all()

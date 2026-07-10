@@ -53,5 +53,6 @@ def search_slots(
         )
 
     return AvailabilitySearchResponse(
+        count=len(slots),
         available_slots=slots
     )
