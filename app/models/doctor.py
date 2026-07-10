@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer, ForeignKey
-from app.database import Base
 from sqlalchemy.orm import relationship
+from app.database import Base
 
 
 class Doctor(Base):
@@ -9,6 +9,20 @@ class Doctor(Base):
     doctor_id = Column(String, primary_key=True, index=True)
     name = Column(String, nullable=False)
     specialty = Column(String, nullable=False)
-    branch_id = Column(String, ForeignKey("branches.branch_id"))
+
+    branch_id = Column(
+        String,
+        ForeignKey("branches.branch_id")
+    )
+
     experience_years = Column(Integer)
-    availability = relationship("Availability", back_populates="doctor")
+
+    branch = relationship(
+        "Branch",
+        back_populates="doctors"
+    )
+
+    availability = relationship(
+        "Availability",
+        back_populates="doctor"
+    )

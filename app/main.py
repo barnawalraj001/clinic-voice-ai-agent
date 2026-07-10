@@ -1,12 +1,14 @@
 from fastapi import FastAPI
 
 from app.routers.availability import router as availability_router
+from app.routers.appointment import router as appointment_router
 
 app = FastAPI(
     title="Clinic Voice AI Backend"
 )
 
 app.include_router(availability_router)
+app.include_router(appointment_router)
 
 
 @app.get("/")

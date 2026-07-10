@@ -23,3 +23,9 @@ class Availability(Base):
     is_booked = Column(Boolean, default=False)
     
     doctor = relationship("Doctor", back_populates="availability")
+
+    appointment = relationship(
+        "Appointment",
+        back_populates="availability",
+        uselist=False
+    )
