@@ -39,8 +39,7 @@ class Appointment(Base):
     availability_id = Column(
         Integer,
         ForeignKey("availability.id"),
-        nullable=False,
-        unique=True
+        nullable=False
     )
 
     status = Column(
