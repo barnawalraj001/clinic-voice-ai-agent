@@ -5,6 +5,8 @@ from app.dependencies import get_db
 from app.schemas.appointment import (
     BookAppointmentRequest,
     BookAppointmentResponse,
+    CancelAppointmentRequest,
+    CancelAppointmentResponse,
 )
 from app.services.booking_service import BookingService
 
@@ -28,4 +30,19 @@ def book_appointment(
         availability_id=request.availability_id,
         patient_name=request.patient_name,
         phone=request.phone,
+    )
+
+
+@router.post(
+    "/cancel",
+    response_model=CancelAppointmentResponse,
+)
+def cancel_appointment(
+    request: CancelAppointmentRequest,
+    db: Session = Depends(get_db),
+):
+
+    return BookingService.cancel_appointment(
+        db=db,
+        appointment_id=request.appointment_id,
     )

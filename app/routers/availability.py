@@ -43,6 +43,8 @@ def search_slots(
 
         slots.append(
             SlotResponse(
+                availability_id=availability.id,
+                doctor_id=doctor.doctor_id,
                 doctor_name=doctor.name,
                 specialty=doctor.specialty,
                 branch=branch.name,

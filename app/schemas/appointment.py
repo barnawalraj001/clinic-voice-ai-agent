@@ -15,3 +15,12 @@ class BookAppointmentResponse(BaseModel):
     date: str
     time: str
     message: str
+
+
+class CancelAppointmentRequest(BaseModel):
+    appointment_id: int
+
+
+class CancelAppointmentResponse(BaseModel):
+    success: bool
+    message: str

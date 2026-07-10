@@ -62,3 +62,47 @@ class BookingService:
             "time": slot.start_time.strftime("%H:%M"),
             "message": "Appointment booked successfully."
         }
+
+    @staticmethod
+
+    def cancel_appointment(
+        db: Session,
+        appointment_id: int,
+    ):
+
+        appointment = (
+            db.query(Appointment)
+            .filter(
+                Appointment.appointment_id == appointment_id
+            )
+            .first()
+        )
+
+        if appointment is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Appointment not found."
+            )
+
+        if appointment.status == "CANCELLED":
+            raise HTTPException(
+                status_code=409,
+                detail="Appointment is already cancelled."
+            )
+
+        slot = appointment.availability
+
+        appointment.status = "CANCELLED"
+
+        slot.is_booked = False
+
+        try:
+            db.commit()
+        except Exception:
+            db.rollback()
+            raise
+
+        return {
+            "success": True,
+            "message": "Appointment cancelled successfully."
+        }

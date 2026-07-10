@@ -13,6 +13,8 @@ class AvailabilitySearchRequest(BaseModel):
 
 
 class SlotResponse(BaseModel):
+    availability_id: int
+    doctor_id: str
     doctor_name: str
     specialty: str
     branch: str
