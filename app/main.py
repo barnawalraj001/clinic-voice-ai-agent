@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from app.routers.availability import router as availability_router
 from app.routers.appointment import router as appointment_router
 from app.routers.patients import router as patient_router
+from app.routers.dashboard import router as dashboard_router
 
 logging.basicConfig(
     level=logging.INFO,
@@ -18,6 +19,7 @@ app = FastAPI(
 app.include_router(availability_router)
 app.include_router(appointment_router)
 app.include_router(patient_router)
+app.include_router(dashboard_router)
 
 
 @app.get("/")
