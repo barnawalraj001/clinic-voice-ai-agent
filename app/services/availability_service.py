@@ -1,3 +1,6 @@
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 from sqlalchemy.orm import Session
 
 from app.models import Doctor, Availability, Branch
@@ -35,6 +38,26 @@ SPECIALTY_ALIASES = {
 }
 
 
+def normalize_specialty(value: str) -> str:
+    value = value.lower().strip()
+
+    for alias, canonical in SPECIALTY_ALIASES.items():
+        if alias in value:
+            return canonical
+
+    return value
+
+
+def normalize_branch(value: str) -> str | None:
+    value_lower = value.lower().strip()
+
+    for alias, branch_id in BRANCH_ALIASES.items():
+        if alias in value_lower:
+            return branch_id
+
+    return None
+
+
 def search_availability(
     db: Session,
     specialty=None,
@@ -42,6 +65,8 @@ def search_availability(
     date=None,
     preferred_time=None,
 ):
+    today = datetime.now(ZoneInfo("Asia/Kolkata")).date()
+
     query = (
         db.query(Availability, Doctor, Branch)
         .join(Doctor, Availability.doctor_id == Doctor.doctor_id)
@@ -50,35 +75,18 @@ def search_availability(
     )
 
     if specialty:
-        specialty_lower = specialty.lower().strip()
-
-        normalized_specialty = None
-
-        for alias, canonical in SPECIALTY_ALIASES.items():
-            if alias in specialty_lower:
-                normalized_specialty = canonical
-                break
-
-        if normalized_specialty:
-            specialty = normalized_specialty
+        specialty = normalize_specialty(specialty)
 
         query = query.filter(
             Doctor.specialty.ilike(f"%{specialty}%")
         )
 
     if branch:
-        branch_lower = branch.lower().strip()
+        branch_id = normalize_branch(branch)
 
-        matched_branch_id = None
-
-        for alias, branch_id in BRANCH_ALIASES.items():
-            if alias in branch_lower:
-                matched_branch_id = branch_id
-                break
-
-        if matched_branch_id:
+        if branch_id:
             query = query.filter(
-                Branch.branch_id == matched_branch_id
+                Branch.branch_id == branch_id
             )
         else:
             query = query.filter(
@@ -86,7 +94,13 @@ def search_availability(
             )
 
     if date:
-        query = query.filter(Availability.date == date)
+        query = query.filter(
+            Availability.date >= date
+        )
+    else:
+        query = query.filter(
+            Availability.date >= today
+        )
 
     if preferred_time:
         query = query.filter(Availability.start_time >= preferred_time)
