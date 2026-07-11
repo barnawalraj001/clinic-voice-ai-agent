@@ -1,8 +1,11 @@
-from datetime import date, timedelta, time
+import logging
 import random
+from datetime import date, timedelta, time
 
 from app.database import SessionLocal
 from app.models import Doctor, Availability
+
+logger = logging.getLogger(__name__)
 
 
 def generate_availability(days=30):
@@ -58,4 +61,4 @@ def generate_availability(days=30):
     db.commit()
     db.close()
 
-    print("✅ Availability Generated")
+    logger.info("Availability generated")

@@ -1,8 +1,11 @@
 import csv
+import logging
 
 from app.database import SessionLocal
 from app.models import Branch, Doctor
 from app.services.availability_generator import generate_availability
+
+logger = logging.getLogger(__name__)
 
 
 def seed_branches():
@@ -52,4 +55,8 @@ if __name__ == "__main__":
     seed_doctors()
     generate_availability()
 
-    print("✅ Database Seeded Successfully!")
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
+    )
+    logger.info("Database seeded successfully")

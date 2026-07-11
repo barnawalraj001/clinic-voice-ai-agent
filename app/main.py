@@ -1,8 +1,15 @@
+import logging
+
 from fastapi import FastAPI
 
 from app.routers.availability import router as availability_router
 from app.routers.appointment import router as appointment_router
 from app.routers.patients import router as patient_router
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
+)
 
 app = FastAPI(
     title="Clinic Voice AI Backend"

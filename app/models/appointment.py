@@ -9,6 +9,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.database import Base
+from app.enums.appointment_status import AppointmentStatus
 
 
 class Appointment(Base):
@@ -45,7 +46,7 @@ class Appointment(Base):
     status = Column(
         String,
         nullable=False,
-        default="BOOKED"
+        default=AppointmentStatus.BOOKED.value
     )
 
     created_at = Column(

@@ -2,6 +2,16 @@ from sqlalchemy.orm import Session
 
 from app.models import Doctor, Availability, Branch
 
+BRANCH_ALIASES = {
+    "em bypass": "B001",
+    "apollo em bypass": "B001",
+    "apollo multispeciality hospitals em bypass": "B001",
+    "apollo multispeciality hospitals em bypass, kolkata": "B001",
+
+    "narendrapur": "B002",
+    "apollo hospitals narendrapur": "B002",
+}
+
 
 def search_availability(
     db: Session,
@@ -21,7 +31,23 @@ def search_availability(
         query = query.filter(Doctor.specialty.ilike(f"%{specialty}%"))
 
     if branch:
-        query = query.filter(Branch.name.ilike(f"%{branch}%"))
+        branch_lower = branch.lower().strip()
+
+        matched_branch_id = None
+
+        for alias, branch_id in BRANCH_ALIASES.items():
+            if alias in branch_lower:
+                matched_branch_id = branch_id
+                break
+
+        if matched_branch_id:
+            query = query.filter(
+                Branch.branch_id == matched_branch_id
+            )
+        else:
+            query = query.filter(
+                Branch.name.ilike(f"%{branch}%")
+            )
 
     if date:
         query = query.filter(Availability.date == date)

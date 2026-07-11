@@ -1,6 +1,16 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
+from app.constants.appointment_errors import (
+    APPOINTMENT_ALREADY_CANCELLED,
+    APPOINTMENT_NOT_FOUND,
+    AVAILABILITY_SLOT_NOT_FOUND,
+    CANCELLED_APPOINTMENT_CANNOT_RESCHEDULE,
+    REQUESTED_AVAILABILITY_SLOT_NOT_FOUND,
+    REQUESTED_SLOT_ALREADY_BOOKED,
+    SLOT_ALREADY_BOOKED,
+)
+from app.enums.appointment_status import AppointmentStatus
 from app.models.availability import Availability
 from app.models.appointment import Appointment
 
@@ -24,13 +34,13 @@ class BookingService:
         if slot is None:
             raise HTTPException(
                 status_code=404,
-                detail="Availability slot not found."
+                detail=AVAILABILITY_SLOT_NOT_FOUND,
             )
 
         if slot.is_booked:
             raise HTTPException(
                 status_code=409,
-                detail="This slot is already booked."
+                detail=SLOT_ALREADY_BOOKED,
             )
 
         appointment = Appointment(
@@ -38,7 +48,7 @@ class BookingService:
             phone=phone,
             doctor_id=slot.doctor_id,
             availability_id=slot.id,
-            status="BOOKED",
+            status=AppointmentStatus.BOOKED.value,
         )
 
         db.add(appointment)
@@ -64,7 +74,6 @@ class BookingService:
         }
 
     @staticmethod
-
     def cancel_appointment(
         db: Session,
         appointment_id: int,
@@ -81,18 +90,18 @@ class BookingService:
         if appointment is None:
             raise HTTPException(
                 status_code=404,
-                detail="Appointment not found."
+                detail=APPOINTMENT_NOT_FOUND,
             )
 
-        if appointment.status == "CANCELLED":
+        if appointment.status == AppointmentStatus.CANCELLED.value:
             raise HTTPException(
                 status_code=409,
-                detail="Appointment is already cancelled."
+                detail=APPOINTMENT_ALREADY_CANCELLED,
             )
 
         slot = appointment.availability
 
-        appointment.status = "CANCELLED"
+        appointment.status = AppointmentStatus.CANCELLED.value
 
         slot.is_booked = False
 
@@ -113,7 +122,6 @@ class BookingService:
         appointment_id: int,
         new_availability_id: int,
     ):
-        # Find appointment
         appointment = (
             db.query(Appointment)
             .filter(Appointment.appointment_id == appointment_id)
@@ -123,19 +131,17 @@ class BookingService:
         if appointment is None:
             raise HTTPException(
                 status_code=404,
-                detail="Appointment not found."
+                detail=APPOINTMENT_NOT_FOUND,
             )
 
-        if appointment.status == "CANCELLED":
+        if appointment.status == AppointmentStatus.CANCELLED.value:
             raise HTTPException(
                 status_code=409,
-                detail="Cancelled appointments cannot be rescheduled."
+                detail=CANCELLED_APPOINTMENT_CANNOT_RESCHEDULE,
             )
 
-        # Current slot
         old_slot = appointment.availability
 
-        # New slot
         new_slot = (
             db.query(Availability)
             .filter(Availability.id == new_availability_id)
@@ -145,25 +151,22 @@ class BookingService:
         if new_slot is None:
             raise HTTPException(
                 status_code=404,
-                detail="Requested availability slot not found."
+                detail=REQUESTED_AVAILABILITY_SLOT_NOT_FOUND,
             )
 
         if new_slot.is_booked:
             raise HTTPException(
                 status_code=409,
-                detail="Requested slot is already booked."
+                detail=REQUESTED_SLOT_ALREADY_BOOKED,
             )
 
-        # Release old slot
         old_slot.is_booked = False
 
-        # Reserve new slot
         new_slot.is_booked = True
 
-        # Update appointment
         appointment.availability_id = new_slot.id
         appointment.doctor_id = new_slot.doctor_id
-        appointment.status = "BOOKED"
+        appointment.status = AppointmentStatus.BOOKED.value
 
         try:
             db.commit()
