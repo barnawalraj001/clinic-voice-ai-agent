@@ -7,7 +7,7 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
 ![React](https://img.shields.io/badge/React-Dashboard-61DAFB)
 ![Retell AI](https://img.shields.io/badge/Retell-Voice_AI-purple)
-![Railway](https://img.shields.io/badge/Railway-Deployed-black)
+![Render](https://img.shields.io/badge/Render-Deployed-black)
 
 ---
 
@@ -64,7 +64,7 @@ The React Admin Dashboard is intentionally maintained as a separate repository f
 - ✅ Double-booking prevention
 - ✅ Availability management
 - ✅ Dashboard APIs
-- ✅ Railway deployment
+- ✅ Render deployment
 
 ---
 
@@ -97,7 +97,7 @@ The React Admin Dashboard is intentionally maintained as a separate repository f
 | Conflict prevention | ✅ |
 | Voice AI | ✅ |
 | React Dashboard | ✅ |
-| Railway Deployment | ✅ |
+| Render Deployment | ✅ |
 
 ---
 
@@ -160,7 +160,7 @@ The solution follows a modular service-oriented architecture where the Voice AI 
 | Validation | Pydantic |
 | Frontend | React + Vite |
 | UI Library | Material UI |
-| Deployment | Railway |
+| Deployment | Render |
 | Dashboard Hosting | Netlify |
 
 ---
@@ -785,7 +785,7 @@ Several design decisions were made to improve conversation quality and reliabili
 | Returning patient recognition | ✅ |
 | Cross-branch search | ✅ |
 | React Admin Dashboard | ✅ |
-| Railway deployment | ✅ |
+| Render deployment | ✅ |
 | Retell AI telephony | ✅ |
 
 ---
@@ -826,7 +826,7 @@ Potential production enhancements include:
 | Component | Platform |
 |-----------|----------|
 | Voice Agent | Retell AI |
-| Backend API | Railway |
+| Backend API | Render |
 | PostgreSQL | Railway |
 | Admin Dashboard | Netlify (Separate Repository) |
 
@@ -881,7 +881,7 @@ http://localhost:5173
 ## Live Backend
 
 ```
-https://web-production-81570.up.railway.app/  
+https://clinic-voice-ai-agent.onrender.com/  
 ```
 
 ---
@@ -889,7 +889,7 @@ https://web-production-81570.up.railway.app/
 ## Swagger
 
 ```
-https://web-production-81570.up.railway.app/docs
+https://clinic-voice-ai-agent.onrender.com/docs
 ```
 
 ---
