@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers.availability import router as availability_router
 from app.routers.appointment import router as appointment_router
@@ -14,6 +15,16 @@ logging.basicConfig(
 
 app = FastAPI(
     title="Clinic Voice AI Backend"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(availability_router)
