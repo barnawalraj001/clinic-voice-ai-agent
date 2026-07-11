@@ -12,6 +12,28 @@ BRANCH_ALIASES = {
     "apollo hospitals narendrapur": "B002",
 }
 
+SPECIALTY_ALIASES = {
+    "cardiologist": "Cardiology",
+    "cardiology": "Cardiology",
+
+    "orthopedic": "Orthopedics",
+    "orthopedist": "Orthopedics",
+    "orthopaedic": "Orthopedics",
+    "orthopedics": "Orthopedics",
+
+    "pediatrician": "Pediatrics",
+    "pediatrics": "Pediatrics",
+
+    "gynecologist": "Obstetrics & Gynecology",
+    "gynaecologist": "Obstetrics & Gynecology",
+    "obgyn": "Obstetrics & Gynecology",
+    "obstetrics": "Obstetrics & Gynecology",
+
+    "gastroenterologist": "Gastroenterology & Hepatology",
+    "gastroenterology": "Gastroenterology & Hepatology",
+    "hepatology": "Gastroenterology & Hepatology",
+}
+
 
 def search_availability(
     db: Session,
@@ -28,7 +50,21 @@ def search_availability(
     )
 
     if specialty:
-        query = query.filter(Doctor.specialty.ilike(f"%{specialty}%"))
+        specialty_lower = specialty.lower().strip()
+
+        normalized_specialty = None
+
+        for alias, canonical in SPECIALTY_ALIASES.items():
+            if alias in specialty_lower:
+                normalized_specialty = canonical
+                break
+
+        if normalized_specialty:
+            specialty = normalized_specialty
+
+        query = query.filter(
+            Doctor.specialty.ilike(f"%{specialty}%")
+        )
 
     if branch:
         branch_lower = branch.lower().strip()
